@@ -253,6 +253,22 @@ func TestDecodeArrayArray(t *testing.T) {
 	}
 }
 
+func TestDecodeArrayWitchEmptyStringKeyAndNulllValue(t *testing.T) {
+	decoder := NewUnSerializer("a:1:{s:0:\"\";N;}")
+
+	if result, err := decoder.Decode(); err != nil {
+		t.Errorf("Can not decode array value %#v \n", err)
+	} else {
+		if arrVal, ok := result.(PhpArray); !ok {
+			t.Errorf("Unable to convert %v to PhpArray\n", result)
+		} else if v1, ok1 := arrVal[""]; !ok1 {
+			t.Errorf("Array value decoded incorrectly, key `` doest not exists\n")
+		} else if v1 != nil {
+			t.Errorf("Value isn't nil\n", v1)
+		}
+	}
+}
+
 func TestDecodeObject(t *testing.T) {
 	var (
 		val PhpValue

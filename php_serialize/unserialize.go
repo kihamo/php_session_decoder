@@ -142,6 +142,8 @@ func (self *UnSerializer) decodeString(left, right rune, isFinal bool) PhpValue 
 				val = string(buf)
 			}
 		}
+	} else {
+		val = ""
 	}
 
 	self.expect(right)

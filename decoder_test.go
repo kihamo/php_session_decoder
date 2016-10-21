@@ -136,6 +136,24 @@ func TestDecodeComplexArrayValue(t *testing.T) {
 	}
 }
 
+func TestDecodeArrayWitchEmptyStringKeyAndNulllValue(t *testing.T) {
+	decoder := NewPhpDecoder("bar|a:1:{s:0:\"\";N;}")
+
+	if result, err := decoder.Decode(); err != nil {
+		t.Errorf("Can not decode array value %#v \n", err)
+	} else {
+		if v, ok := (result)["bar"]; !ok {
+			t.Errorf("Array was not decoded \n")
+		} else if arrValue, ok := v.(php_serialize.PhpArray); ok != true {
+			t.Errorf("Array value was decoded incorrectly: %#v \n", v)
+		} else if value, ok := arrValue[""]; !ok {
+			t.Errorf("Array key was decoded incorrectly: %#v\n", v)
+		} else if value != nil {
+			t.Errorf("Array value was decoded incorrectly: %#v\n", v)
+		}
+	}
+}
+
 func TestDecodeMultidimensionalArrayValue(t *testing.T) {
 	decoder := NewPhpDecoder("arr3|a:1:{s:4:\"dim1\";a:5:{i:0;s:4:\"dim2\";i:1;i:0;i:2;i:3;i:3;i:5;i:4;a:2:{i:0;s:4:\"dim3\";i:1;i:5;}}}")
 	if result, err := decoder.Decode(); err != nil {
